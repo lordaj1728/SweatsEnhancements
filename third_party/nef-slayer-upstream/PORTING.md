@@ -1,0 +1,7 @@
+# NEF Slayer upstream provenance and adaptation (FPE 0.9.126)
+
+The ten `.java` files in this directory are unmodified upstream source from `im2pb/NotEnoughFakepixel` commit `f80cddf6ac1e752bd402d1d963f3f987253b4795`, under the included LGPL-3.0 `LICENSE`. They are reference/corresponding original source, **not** the compiled FPE classes.
+
+The adapted classes compiled into FPE are in `src/main/java/com/fpe/feature/nef/` under the same ten class names. NEF `OutlineUtils`, `EntityHighlightUtils`, `RenderEntityModelEvent`, model post-layer callback and block/sound packet dispatch were adapted too. NEF application services—configuration, location/Slayer context, scoreboards, titles, and layout—are connected to FPE's existing systems. The earlier substitute renderer `SlayerNefPort` is retained only for FPE-specific boxes, Voidgloom tracer and status diagnostics; its overlapping Maddox, title/sound, timer, filter, overlay, boss HP and pillar handlers have been de-registered/replaced.
+
+The original model callback and packet paths now compile, but **runtime mixin application and Fakepixel cue compatibility cannot be established by offline tests**. The new hooks are optional (`require=0`) to avoid a hard startup failure if a render or packet method differs; `/fpe dump` and in-game tests remain necessary. The original NEF logic may need Fakepixel-specific calibration. The confirmed dungeon alerts were not modified.

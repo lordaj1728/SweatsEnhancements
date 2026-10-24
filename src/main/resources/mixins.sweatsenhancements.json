@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "package": "com.sweatsenhancements.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "injectors": { "defaultRequire": 1 },
+  "client": ["PlayerDropGuard", "GuiClickGuard", "SafeguardSlotMarker", "TeleportPacketView", "SmoothCameraView", "SmoothRenderGlobal", "DungeonControlBounds", "NoHurtCamera", "NEFSlayerPackets", "NEFSlayerModel"]
+}

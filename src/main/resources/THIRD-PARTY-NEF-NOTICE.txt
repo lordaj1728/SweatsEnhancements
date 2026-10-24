@@ -1,0 +1,60 @@
+Dungeon map rendering in SweatsEnhancements is adapted from NotEnoughFakepixel's DungeonsMap.java
+https://github.com/davidbelesp/NotEnoughFakepixel/blob/master/src/main/java/com/nef/notenoughfakepixel/features/skyblock/dungeons/DungeonsMap.java
+
+Copyright (C) NotEnoughFakepixel contributors. Original work published under
+GNU Lesser General Public License version 3 (LICENSE in the upstream repository).
+See THIRD-PARTY-NEF-LGPL-3.0.txt in this jar for the full license.
+
+Changes for SweatsEnhancements (0.0.1): retain the tagged dungeon-map selection and a movable
+HUD, displaying the received map with Minecraft’s own map renderer as in NEF.
+The later custom grid, room-name scanner and puzzle code are excluded from this
+release and preserved only in the archived 0.9.174 source. The corresponding
+SweatsEnhancements source is in the versioned release source ZIP.
+
+Dungeon entity outlines in SweatsEnhancements's DungeonVisualAdditions.java also adapt the
+buffered, per-vertex coloured hitbox-edge drawing in upstream utils/RenderUtils.java:
+https://github.com/davidbelesp/NotEnoughFakepixel/blob/master/src/main/java/com/nef/notenoughfakepixel/utils/RenderUtils.java
+The outline is applied only to identified physical entities paired with dungeon
+labels, rather than to the labels themselves. Copyright and LGPL-3.0 terms above
+also apply to this adapted portion; corresponding source is in the source ZIP.
+
+Optional No Hurt Camera mixin in SweatsEnhancements's NoHurtCamera.java adapts the early-return
+camera-effect guard from NEF's mixin/MixinEntityRenderer.java at revision
+f80cddf6ac1e752bd402d1d963f3f987253b4795. SweatsEnhancements adds its own opt-in
+configuration guard and limits the change to the hurt-camera effect.
+Corresponding modified source is distributed in the versioned source ZIP.
+
+The separately switchable DungeonControlShape lever/button bounds orient wall slices
+as in NEF's LGPL-3.0 mixins MixinBlockLever.java and MixinBlockButton.java
+(revision f80cddf6ac1e752bd402d1d963f3f987253b4795); SweatsEnhancements restricts
+their application to confirmed dungeon areas and retains its own Forge hooks.
+The modified corresponding source ships in the matching SweatsEnhancements source ZIP.
+
+The optional Watcher-triggered /pc Blood Ready! behavior in DungeonCombatVisuals.java
+is adapted from NEF MiscDungFeatures.java (revision f80cddf6ac1e752bd402d1d963f3f987253b4795);
+SweatsEnhancements adds a separate default-off party switch and reuses its existing Watcher detector.
+Corresponding modified source is in the matching SweatsEnhancements source ZIP.
+
+SlayerBasics.java behavior (slayer overlay, boss timer and Hellion Shield chat filter)
+is adapted from NEF SlayerOverlay.java, SlayerTimer.java and HellionShieldFilter.java
+(revision f80cddf6ac1e752bd402d1d963f3f987253b4795). SweatsEnhancements independently
+implements scoreboard gating and rendering. Modified source is in the matching source ZIP.
+
+SlayerNefPort.java adapts the features of NEF AutoOpenMaddox, MinibossAlert,
+SlayerMobsDisplay, SlayerHealthDisplay, VoidgloomSeraph, FirePillarDisplay,
+and BlazeAttunements (revision f80cddf6ac1e752bd402d1d963f3f987253b4795).
+SweatsEnhancements implements its own bounded scans, conservative pairing and independent default-off
+switches. Corresponding SweatsEnhancements source is provided in the matching source ZIP.
+
+0.9.126 direct Slayer source adaptation (originals and license in the source ZIP's
+third_party/nef-slayer-upstream/): AutoOpenMaddox.java, BlazeAttunements.java,
+FirePillarDisplay.java, HellionShieldFilter.java, MinibossAlert.java,
+SlayerHealthDisplay.java, SlayerMobsDisplay.java, SlayerOverlay.java,
+SlayerTimer.java, VoidgloomSeraph.java from im2pb/NotEnoughFakepixel commit
+f80cddf6ac1e752bd402d1d963f3f987253b4795, under LGPL-3.0.
+The following NEF utility/event implementations are also adapted in SweatsEnhancements:
+OutlineUtils.java, EntityHighlightUtils.java, RenderEntityModelEvent.java,
+model post-layer callback and packet dispatch. SweatsEnhancements substitutions connect SweatsEnhancements config,
+scoreboard/Slayer context, model/packet hooks and title/UI services. SweatsEnhancements-specific
+bounding boxes/tracer glue remains separately authored in SlayerNefPort.java.
+All corresponding modified Java sources are in the matching SweatsEnhancements source ZIP.

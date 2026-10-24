@@ -1,0 +1,11 @@
+Sky VeLor Spirit Leap menu and dependencies
+Copyright (c) 2026 PekaDeco
+Source: https://github.com/pekadeco/Sky-VeLor
+Revision: c1b56668155e31fca7a8d3c82058496d0e77d97e
+
+The upstream root LICENSE is MIT. The original Leap menu and supporting source are included unmodified under third_party/sky-velor-leap-upstream/ in the corresponding source archive. SweatsEnhancements adapts their package, configuration/event integration and diagnostic logger under src/main/java/com/sweatsenhancements/thirdparty/skyvelor/. The upstream supplied archive also contains a different LGPL-3.0 LICENSE.txt; this is retained alongside the MIT licence in the corresponding source, without treating the two licence texts as interchangeable.
+
+Permission notice for MIT-licensed material:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

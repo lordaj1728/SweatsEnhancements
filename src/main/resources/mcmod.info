@@ -1,0 +1,17 @@
+[
+{
+  "modid": "sweatsenhancements",
+  "name": "SweatsEnhancements",
+  "description": "Independent client-side SkyBlock quality-of-life tools for Forge 1.8.9.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "authorList": [],
+  "credits": "",
+  "logoFile": "",
+  "url": "",
+  "updateUrl": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

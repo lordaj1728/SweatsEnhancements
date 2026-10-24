@@ -1,0 +1,137 @@
+/*
+ * SweatsEnhancements 1.8.9 - build configuration
+ * Same toolchain as Lantern: Debuggingss ForgeGradle fork on Gradle 6.9.4 / JDK 8.
+ * One installable jar: small, default-off client mixins are bundled for item safety and visual camera smoothing.
+ */
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url = "https://maven.minecraftforge.net/" }
+        maven { url = "https://jitpack.io" }
+    }
+    dependencies {
+        classpath "com.github.Debuggingss:ForgeGradle:1d22621a6b"
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+// Brigadier is shaded straight into the jar (no shadow plugin needed - it has zero deps).
+configurations {
+    shaded      // libraries whose classes go straight in (Brigadier MIT, Kotlin stdlib Apache-2.0)
+    moulconfig  // the config GUI library, LGPL-3.0-or-later, handled separately below
+}
+
+version = "0.0.1"
+group = "com.sweatsenhancements"
+archivesBaseName = "SweatsEnhancements-1.8.9"
+
+sourceCompatibility = targetCompatibility = 1.8
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    mappings = "stable_22"
+    runDir = "run"
+}
+
+repositories {
+    mavenCentral()
+    maven { url = "https://repo.spongepowered.org/maven/" }
+    maven { url = "https://maven.minecraftforge.net/" }
+    maven { url = "https://libraries.minecraft.net/" }
+    // MoulConfig, the config GUI NotEnoughUpdates publishes on its own Maven
+    maven { url = "https://maven.notenoughupdates.org/releases/" }
+}
+
+dependencies {
+    compile 'com.mojang:brigadier:1.3.10'
+    shaded 'com.mojang:brigadier:1.3.10'
+
+    compile 'org.notenoughupdates.moulconfig:legacy:4.7.2'
+    moulconfig 'org.notenoughupdates.moulconfig:legacy:4.7.2'
+
+    // MoulConfig is written in Kotlin: 65 of its 296 classes call kotlin.jvm.internal.Intrinsics,
+    // so without the stdlib the config screen cannot link and silently falls back. It is not a
+    // transitive dependency of the moulconfig artifact, because that artifact is published for
+    // other mods to shade. 2.3.0 is the version that pairs with this same 4.7.2.
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:2.3.0'
+    shaded 'org.jetbrains.kotlin:kotlin-stdlib:2.3.0'
+    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') { transitive = false }
+    shaded('org.spongepowered:mixin:0.7.11-SNAPSHOT') { transitive = false }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    filesMatching('mcmod.info') {
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+}
+
+jar {
+    // pull the shaded libraries in, keeping only their classes
+    from(configurations.shaded.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.RSA'
+        exclude 'META-INF/*.DSA'
+        exclude 'LICENSE'
+        exclude 'META-INF/versions/**'    // Java 9 multi-release module-info, meaningless on 1.8
+    }
+
+    // MoulConfig: classes, assets/moulconfig/*.png (the GUI textures), and the
+    // META-INF/services entry it uses to find its Forge bindings. All three are needed.
+    from(configurations.moulconfig.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.RSA'
+        exclude 'META-INF/*.DSA'
+        exclude 'LICENSE'
+        exclude 'fabric.mod.json'
+    }
+
+    // MoulConfig's published POM calls this LGPL-3.0-or-later, but the actual
+    // bundled LICENSE text is MPL-2.0. Preserve that text verbatim without
+    // falsely naming it LGPL; record the unresolved metadata discrepancy.
+    from(configurations.moulconfig.collect { it.isDirectory() ? it : zipTree(it) }) {
+        include 'LICENSE'
+        rename 'LICENSE', 'THIRD-PARTY-moulconfig-LICENSE-IN-ARTIFACT.txt'
+    }
+    manifest {
+        attributes([
+            'Specification-Title'   : 'SweatsEnhancements',
+            'Specification-Version' : '1',
+            'Implementation-Title'  : 'SweatsEnhancements',
+            'Implementation-Version': project.version,
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'MixinConfigs': 'mixins.sweatsenhancements.json',
+            'TweakOrder': '0',
+            'ForceLoadAsMod': 'true',
+            'ModSide': 'CLIENT'
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xmaxerrs' << '200'
+}
+
+// Keep the source-of-truth feature registry and the actual annotated /sweatsenhancements screen together.
+// This would have rejected the 0.9.103/.104 jars before compilation.
+task verifyGeneratedGui {
+    doLast {
+        def implemented = file('src/main/java/com/sweatsenhancements/config/Implemented.java').getText('UTF-8')
+        def gui = file('src/main/java/com/sweatsenhancements/gui/SweatsConfig.java').getText('UTF-8')
+        def liveSection = implemented.substring(implemented.indexOf('public static final Set<String> IDS ='),
+                implemented.indexOf('public static final Set<String> DEFAULT_OFF'))
+        def ids = (liveSection =~ /"([A-Z]{2,4}\d{3})"/).collect { it[1] }.toSet()
+        def fields = (gui =~ /public boolean ([A-Z]{2,4}\d{3})\s*=/).collect { it[1] }.toSet()
+        def missing = ids - fields
+        def extra = fields - ids
+        if (!missing.empty || !extra.empty)
+            throw new GradleException("/sweatsenhancements menu is out of sync: missing=${missing}, extra=${extra}. Run python3 tools/gen_gui.py")
+    }
+}
+compileJava.dependsOn verifyGeneratedGui
