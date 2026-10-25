@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build FakepixelEnhancements for Minecraft 1.8.9.
+# Build SweatsEnhancements for Minecraft 1.8.9.
 #
 # Forge 1.8.9 needs an old toolchain, and its original tooling has rotted (the
 # MCP mapping host export.mcpbot.bspk.rs is gone, and the decompiler download is
@@ -9,7 +9,7 @@
 #
 # Anything missing is downloaded into ./toolchain on first run.
 #
-#   ./build.sh                 -> build/libs/FakepixelEnhancements-1.8.9-0.1.0.jar
+#   ./build.sh                 -> build/libs/SweatsEnhancements-1.8.9-0.0.1.jar
 #   ./build.sh clean           -> wipe build output
 #   ./build.sh --info          -> any other gradle task also works
 

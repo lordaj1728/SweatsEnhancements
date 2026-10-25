@@ -2,6 +2,7 @@
 
 Independent client-side quality-of-life mod for **Minecraft 1.8.9 Forge**. Java 8 is the target runtime. This project is not an official server mod.
 
+> **Status:** The 0.0.1 build and offline checks passed. The renamed release has not yet been verified in-game; please report bugs with reproduction steps.
 
 ## Download and install
 
